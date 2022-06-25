@@ -1,19 +1,26 @@
 {
     "name": "aqjw/belongs-to-dependency",
-    "description": "A Laravel Nova field.",
+    "description": "Extended Laravel Nova BelongsTo field that can depend on other fields",
     "keywords": [
         "laravel",
         "nova"
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0"
+        "php": "^7.3|^8",
+        "laravel/nova": "^4.0"
     },
     "autoload": {
         "psr-4": {
             "Aqjw\\BelongsToDependency\\": "src/"
         }
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://nova.laravel.com"
+        }
+    ],
     "extra": {
         "laravel": {
             "providers": [
@@ -25,5 +32,6 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "version": "1.0.0"
 }
