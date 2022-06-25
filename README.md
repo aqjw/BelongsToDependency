@@ -4,7 +4,7 @@ This package is an extension of Laravel Nova's existing BelongsTo field and Vue 
 
 ## Requirements
 
-- PHP 7.3+
+- PHP 8.0.2+
 - Nova 4+
 
 ## Installation
@@ -12,7 +12,7 @@ This package is an extension of Laravel Nova's existing BelongsTo field and Vue 
 You can install this package on a Laravel app that uses [Nova](https://nova.laravel.com) via composer:
 
 ```bash
-composer require aqjw/nova-belongs-to-dependency
+composer require aqjw/belongs-to-dependency
 ```
 
 ## Usage
