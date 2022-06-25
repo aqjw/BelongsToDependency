@@ -3,11 +3,12 @@
     "description": "Extended Laravel Nova BelongsTo field that can depend on other fields",
     "keywords": [
         "laravel",
-        "nova"
+        "nova",
+        "belongs-to"
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8",
+        "php": "^8.0.2",
         "laravel/nova": "^4.0"
     },
     "autoload": {
@@ -33,5 +34,5 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "version": "1.0.0"
+    "version": "4.0.0"
 }
