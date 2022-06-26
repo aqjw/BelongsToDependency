@@ -14,6 +14,17 @@ class BelongsToDependency extends BelongsTo
      */
     public $component = 'belongs-to-dependency';
 
+    public $filterCallback;
+
+    public function __construct($name, $attribute = null, $resource = null)
+    {
+        parent::__construct($name, $attribute, $resource);
+
+        $this->setFilterCallback(function ($query, $dependsOnKey, $dependsOnValue) {
+            $query->where($dependsOnKey, $dependsOnValue);
+        });
+    }
+
     /**
      * Resolve the field's value.
      *
@@ -36,6 +47,12 @@ class BelongsToDependency extends BelongsTo
         }
     }
 
+    public function setFilterCallback($filterCallback)
+    {
+        $this->filterCallback = $filterCallback;
+
+        return $this;
+    }
 
     /**
      * Build an associatable query for the field.
@@ -50,7 +67,7 @@ class BelongsToDependency extends BelongsTo
         $query = parent::buildAssociatableQuery($request, $withTrashed);
 
         if($request->has('dependsOnValue')) {
-            $query->toBase()->where($this->meta['dependsOnKey'], $request->dependsOnValue);
+            call_user_func($this->filterCallback, $query->toBase(), $this->meta['dependsOnKey'], $request->dependsOnValue);
         }
 
         return $query;
