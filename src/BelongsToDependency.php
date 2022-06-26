@@ -4,6 +4,7 @@ namespace Aqjw\BelongsToDependency;
 
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Closure;
 
 class BelongsToDependency extends BelongsTo
 {
@@ -14,15 +15,32 @@ class BelongsToDependency extends BelongsTo
      */
     public $component = 'belongs-to-dependency';
 
-    public $filterCallback;
+    public $buildQuery;
+
+    public $formatResource;
 
     public function __construct($name, $attribute = null, $resource = null)
     {
         parent::__construct($name, $attribute, $resource);
 
-        $this->setFilterCallback(function ($query, $dependsOnKey, $dependsOnValue) {
-            $query->where($dependsOnKey, $dependsOnValue);
-        });
+        $this->buildQuery($this->defaultFilterableCallback());
+    }
+
+
+    /**
+     * Format the given associatable resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  mixed  $resource
+     * @return array
+     */
+    public function formatAssociatableResource(NovaRequest $request, $resource)
+    {
+        if(! $this->formatResource) {
+            return parent::formatAssociatableResource($request, $resource);
+        }
+
+        return call_user_func($this->formatResource, $resource);
     }
 
     /**
@@ -47,9 +65,28 @@ class BelongsToDependency extends BelongsTo
         }
     }
 
-    public function setFilterCallback($filterCallback)
+    /**
+     * Set build query callback
+     * 
+     * @param closure $buildQuery
+     * @return $this
+     */
+    public function buildQuery($buildQuery)
     {
-        $this->filterCallback = $filterCallback;
+        $this->buildQuery = $buildQuery;
+
+        return $this;
+    }
+
+    /**
+     * Set format resource callback
+     * 
+     * @param closure $formatResource
+     * @return $this
+     */
+    public function formatResource(Closure $formatResource)
+    {
+        $this->formatResource = $formatResource;
 
         return $this;
     }
@@ -67,7 +104,10 @@ class BelongsToDependency extends BelongsTo
         $query = parent::buildAssociatableQuery($request, $withTrashed);
 
         if($request->has('dependsOnValue')) {
-            call_user_func($this->filterCallback, $query->toBase(), $this->meta['dependsOnKey'], $request->dependsOnValue);
+            call_user_func(
+                $this->buildQuery,
+                $request, $query->toBase(), $request->dependsOnValue, $this->meta['dependsOnKey']
+            );
         }
 
         return $query;

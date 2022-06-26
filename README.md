@@ -98,6 +98,48 @@ return [
 ];
 ```
 
+
+If you want to add your own conditions to the query, use the `buildQuery` method.
+
+```php
+use Aqjw\BelongsToDependency\BelongsToDependency;
+...
+return [
+    ...
+    BelongsToDependency::make('Product')
+        ->dependsOn('category')
+        ->buildQuery(function ($request, $query, $value, $attribute) {
+            $query->where($attribute, $value)
+                ->where('status', 'active');
+        }),
+    ...
+];
+```
+
+
+If you want to change the resource format, use the `formatResource` method.
+This can be useful if you want to group items.
+
+```php
+use Aqjw\BelongsToDependency\BelongsToDependency;
+...
+return [
+    ...
+    BelongsToDependency::make('Product')
+        ->dependsOn('category')
+        ->formatResource(function ($resource) {
+            return [
+                'display' => $resource->name,
+                'value' => $resource->id,
+                'group' => $resource->parent_category,
+            ];
+        })
+    ...
+];
+```
+
+
+
 ## License
 
 The MIT License (MIT). Please see License File for more information.
