@@ -23,7 +23,7 @@ class BelongsToDependency extends BelongsTo
     {
         parent::__construct($name, $attribute, $resource);
 
-        $this->buildQuery($this->defaultFilterableCallback());
+        $this->buildQuery(fn($query, $values) => $query->where($values));
     }
 
 
@@ -103,11 +103,18 @@ class BelongsToDependency extends BelongsTo
     {
         $query = parent::buildAssociatableQuery($request, $withTrashed);
 
-        if($request->has('dependsOnValue')) {
-            call_user_func(
-                $this->buildQuery,
-                $request, $query->toBase(), $request->dependsOnValue, $this->meta['dependsOnKey']
-            );
+        if($request->has('dependsOnValues')) {
+            // decode the values
+            $values = json_decode($request->dependsOnValues, true);
+
+            // replace keys 
+            foreach ($values as $key => $value) {
+                $values[$this->meta['dependsOn'][$key]] = $value; 
+                unset($values[$key]);
+            }
+
+            // process query
+            call_user_func($this->buildQuery, $query->toBase(), $values);
         }
 
         return $query;
@@ -122,9 +129,19 @@ class BelongsToDependency extends BelongsTo
      */
     public function dependsOn($dependsOnField, $tableKey = null)
     {
-        return $this->withMeta([
-            'dependsOn' => $dependsOnField,
-            'dependsOnKey' => $tableKey ?: strtolower($dependsOnField).'_id',
-        ]);
+        if (is_array($dependsOnField)) {
+            $dependsOn = [];
+            foreach ($dependsOnField as $field => $key) {
+                if (is_string($field) && is_string($key)) {
+                    $dependsOn[$field] = $key;
+                } else {
+                    $dependsOn[$key] = strtolower($key).'_id';
+                }
+            }
+        } else {
+            $dependsOn = [$dependsOnField => $tableKey ?: strtolower($dependsOnField).'_id'];
+        }
+
+        return $this->withMeta(['dependsOn' => $dependsOn]);
     }
 }
