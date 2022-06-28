@@ -5,7 +5,7 @@ import isNil from 'lodash/isNil'
 export default {
     data: () => ({
         dependsOnValues: {},
-        watcherDebounce: null,
+        watcherDebounce: {},
         watcherDebounceTimeout: 200,
     }),
     extends: FormBelongsToField,
@@ -43,6 +43,8 @@ export default {
             for (const [key, component] of Object.entries(components)) {
                 // set value by default
                 this.dependsOnValues[key] = null
+                // register watcherDebounce key
+                this.watcherDebounce[key] = null
 
                 // BelongsTo field
                 if (component.selectedResourceId !== undefined) {
@@ -78,8 +80,8 @@ export default {
             return this.field.dependsOn[component.field.attribute] ? component.field.attribute : null;
         },
         dependencyWatcher(key, value) {
-            clearTimeout(this.watcherDebounce);
-            this.watcherDebounce = setTimeout(() => {
+            clearTimeout(this.watcherDebounce[key]);
+            this.watcherDebounce[key] = setTimeout(() => {
                 if (value === this.dependsOnValues[key]) {
                     return;
                 }
@@ -90,7 +92,7 @@ export default {
                     this.initializeComponent();
                 });
 
-                this.watcherDebounce = null;
+                this.watcherDebounce[key] = null;
             }, this.watcherDebounceTimeout);
         },
         walk(vnode, cb) {
