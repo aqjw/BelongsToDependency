@@ -33,6 +33,5 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "version": "4.0.3"
+    "prefer-stable": true
 }
