@@ -109,12 +109,16 @@ class BelongsToDependency extends BelongsTo
 
             // replace keys 
             foreach ($values as $key => $value) {
-                $values[$this->meta['dependsOn'][$key]] = $value; 
-                unset($values[$key]);
+                if ($this->meta['dependsOn'][$key] != $key) {
+                    $values[$this->meta['dependsOn'][$key]] = $value; 
+                    unset($values[$key]);
+                }
             }
 
-            // process query
-            call_user_func($this->buildQuery, $query->toBase(), $values);
+            if (count($values) == count($this->meta['dependsOn'])) {
+                // process query
+                call_user_func($this->buildQuery, $query->toBase(), $values);
+            }
         }
 
         return $query;
