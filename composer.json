@@ -1,5 +1,5 @@
 {
-    "name": "aqjw/belongs-to-dependency",
+    "name": "aqjw/nova-belongs-to-dependency",
     "description": "Extended Laravel Nova BelongsTo field that can depend on other fields",
     "keywords": [
         "laravel",

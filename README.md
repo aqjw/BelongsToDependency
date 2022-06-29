@@ -1,4 +1,4 @@
-# BelongsTo field with dependency support for Nova
+# Nova BelongsTo dependency
 
 This package is an extension of Laravel Nova's existing BelongsTo field and Vue components.
 
@@ -24,7 +24,7 @@ This package is an extension of Laravel Nova's existing BelongsTo field and Vue 
 This package can be installed via command:
 
 ```bash
-composer require aqjw/belongs-to-dependency
+composer require aqjw/nova-belongs-to-dependency
 ```
 
 ### Usage
