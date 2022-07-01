@@ -50,7 +50,9 @@ export default {
                 if (component.selectedResourceId !== undefined) {
                     if (component.isSearchable) {
                         // register wathcer
-                        component.$watch('selectedResource', ({value}) => this.dependencyWatcher(key, value), {immediate: true});
+                        component.$watch('selectedResource', (selectedResource) => {
+                            this.dependencyWatcher(key, selectedResource?.value)
+                        }, {immediate: true});
 
                         // call initially
                         this.dependencyWatcher(key, component.selectedResource?.value);
