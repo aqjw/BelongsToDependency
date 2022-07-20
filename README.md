@@ -1,5 +1,8 @@
 # Nova BelongsTo dependency
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/aqjw/nova-belongs-to-dependency.svg?style=flat-square)](https://packagist.org/packages/aqjw/nova-belongs-to-dependency)
+[![Total Downloads](https://img.shields.io/packagist/dt/aqjw/nova-belongs-to-dependency.svg?style=flat-square)](https://packagist.org/packages/aqjw/nova-belongs-to-dependency)
+
 This package is an extension of Laravel Nova's existing BelongsTo field and Vue components.
 
 ## Requirements
